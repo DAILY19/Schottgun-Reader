@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="theme-color" content="#f8f5ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SchottGun">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <title>SchottGun Reader — RSVP Reader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- INPUT VIEW -->
+    <section id="input-view" class="view active">
+      <h1 class="logo">SchottGun <span>Reader</span></h1>
+      <p class="tagline">Paste any text. Read one word at a time.</p>
+
+      <label id="upload-zone" for="file-input">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 16 12 12 8 16"/>
+          <line x1="12" y1="12" x2="12" y2="21"/>
+          <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+        </svg>
+        <span id="upload-label">Upload PDF or TXT file</span>
+      </label>
+      <input type="file" id="file-input" accept=".pdf,.txt,application/pdf,text/plain" aria-label="Upload file">
+      <p id="file-status" class="file-status hidden"></p>
+
+      <textarea id="text-input" placeholder="…or paste your article, book chapter, or any text here" autocomplete="off" spellcheck="false"></textarea>
+      <div id="input-actions">
+        <button id="clear-btn" class="btn-secondary btn-sm hidden">Clear</button>
+        <button id="start-btn" class="btn-primary" disabled>Start Reading</button>
+      </div>
+    </section>
+
+    <!-- READER VIEW -->
+    <section id="reader-view" class="view">
+      <div id="word-display-area">
+        <div id="focus-line"></div>
+        <div id="word" aria-live="polite"></div>
+      </div>
+
+      <div id="progress-container">
+        <input type="range" id="progress-bar" min="0" max="100" value="0" step="1" aria-label="Reading progress">
+        <div id="progress-info">
+          <span id="word-counter">0 / 0</span>
+          <span id="time-remaining">0:00</span>
+        </div>
+      </div>
+
+      <div id="controls">
+        <button id="back-btn" class="ctrl-btn" aria-label="Go back 1 word" title="Back">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button id="play-pause-btn" class="ctrl-btn ctrl-main" aria-label="Play / Pause" title="Play / Pause">
+          <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pause-icon" viewBox="0 0 24 24" fill="currentColor" class="hidden"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button id="forward-btn" class="ctrl-btn" aria-label="Go forward 1 word" title="Forward">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 18h-2V6h2zm-3.5-6L6 6v12z"/></svg>
+        </button>
+      </div>
+
+      <div id="speed-control">
+        <label for="speed-slider">
+          <span id="speed-value">250</span> WPM
+        </label>
+        <input type="range" id="speed-slider" min="60" max="1000" value="250" step="10" aria-label="Words per minute">
+      </div>
+
+      <div id="text-panel"></div>
+
+      <button id="new-text-btn" class="btn-secondary">New Text</button>
+    </section>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
